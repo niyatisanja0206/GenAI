@@ -2,7 +2,9 @@ from langchain.chat_models import AzureChatOpenAI
 from langchain.prompts import PromptTemplate, FewShotPromptTemplate
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
+from langchain.memory import ConversationBufferMemory
 import os
+
 load_dotenv()
 
 api_key = os.getenv("AZURE_OPENAI_API_KEY")
@@ -21,35 +23,23 @@ llm = AzureChatOpenAI(
     #Maximum number of tokens to generate in the completion
 )
 
-examples = [
-    {"input": "What is the capital of France?", "output": "The capital of France is Paris."},
-    {"input": "What is the capital of Germany?", "output": "The capital of Germany is Berlin."},
-    {"input": "What is the capital of Italy?", "output": "The capital of Italy is Rome."},
-]
-
-examples_prompt = PromptTemplate(
-    input_variables=["question", "answer"],
-    template="Input: {question}\nOutput: {answer}",
+prompt = PromptTemplate(
+    input_variables=["country"],
+    template="What is your openion on country {country}?",
 )
 
-few_shot_prompt = FewShotPromptTemplate(
-    examples=examples,
-    examples_prompt=examples_prompt,
-    prefix="You are a helpful assistant. Answer the following question.",
-    suffix="\nAnswer:",
-    input_variables=["question"],
+memory = ConversationBufferMemory(
+    memory_key="chat_history",
+    return_messages=True,
 )
-
-formatted_prompt = few_shot_prompt.format(question="What is the capital of Spain?")
-
-print("Formatted Prompt:")
-print(formatted_prompt)
 
 llmchain = LLMChain(
     llm=llm,
-    prompt = few_shot_prompt,
+    prompt=prompt,
+    memory=memory,
 )
 
-result = llmchain.invoke({"question":"What is the capital of Spain?"})
-print(formatted_prompt)
-print(result['test'])
+result = llmchain.invoke({"country": "India"})
+print(result['text'])
+print("-------------------------------------------------------------------------")
+print(memory.buffer)

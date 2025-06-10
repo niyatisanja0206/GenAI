@@ -1,34 +1,56 @@
-from langchain_core.prompts import PromptTemplate
-#from langchain.chat_models import AzureChatOpenAI
-import os
-from langchain.chains import LLMChain
-from dotenv import load_dotenv
 from langchain_openai import AzureChatOpenAI
+from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
+from dotenv import load_dotenv
+import os
 
+# Load environment variables
 load_dotenv()
 
-#defined llm using azureopen ai 
-llm_model= AzureChatOpenAI(
-    openai_api_base=os.getenv("AZURE_OPENAI_API_BASE"),
-    openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
-    openai_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
-    model_name="gpt-4o",
-    temperature=0.7,
+api_key = os.getenv("AZURE_OPENAI_API_KEY")
+deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+api_base = os.getenv("AZURE_OPENAI_API_BASE")
+api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+
+# Few-shot examples
+examples = [
+    {"question": "What is the capital of France?", "answer": "The capital of France is Paris."},
+    {"question": "What is the capital of Germany?", "answer": "The capital of Germany is Berlin."},
+    {"question": "What is the capital of Italy?", "answer": "The capital of Italy is Rome."},
+]
+
+# Template for each example
+example_prompt = PromptTemplate(
+    input_variables=["question", "answer"],
+    template="Input: {question}\nOutput: {answer}",
 )
 
-#defined prompt template
-my_prompt = PromptTemplate.from_template(
-    "Tell me about cricket in a concise manner"
+# FewShotPromptTemplate
+few_shot_prompt = FewShotPromptTemplate(
+    examples=examples,
+    example_prompt=example_prompt,
+    prefix="You are a helpful assistant. Answer the following question.",
+    suffix="Input: {question}\nOutput:",
+    input_variables=["question"],
 )
 
-#connect prompt with llm using LLMChain
-#result = LLMChain(llm=llm_model,prompt=my_prompt)
-#result=result.invoke({})
+# Updated LLM (correct model_kwargs for non-standard params)
+llm = AzureChatOpenAI(
+    api_key=api_key,
+    deployment_name=deployment_name,
+    model="gpt-4o",  
+    temperature=0.9,
+    max_tokens=100,
+    openai_api_version=api_version,
+    openai_api_base=api_base,  
+    model_kwargs={"top_p": 0.9},  
+)
 
-chain = my_prompt | llm_model
-result = chain.invoke({})
+# ✅ New LangChain v0.2+ execution: prompt | llm
+chain = few_shot_prompt | llm
 
-#result = result.content
-# Print the result
-print(result)
+# Run the chain
+question = "What is the capital of Spain?"
+result = chain.invoke({"question": question})
+
+# Print the output
+print("Result:\n", result.content)

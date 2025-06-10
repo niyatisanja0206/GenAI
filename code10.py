@@ -5,21 +5,22 @@ from langchain.chains import LLMChain
 from langchain.memory import ConversationBufferMemory
 import os
 
+
 # Load environment variables
 load_dotenv()
 
 # Load Azure OpenAI API config
-api_key = os.getenv("AZURE_OPENAI_API_KEY")
-api_base = os.getenv("AZURE_OPENAI_API_BASE")
-deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
-api_version = os.getenv("AZURE_OPENAI_API_VERSION")
+api_key_g = os.getenv("AZURE_OPENAI_API_KEY")
+api_base_g = os.getenv("AZURE_OPENAI_API_BASE")
+deployment_name_g = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
+api_version_g = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Initialize the LLM
-llm = AzureChatOpenAI(
-    openai_api_base=api_base,
-    openai_api_version=api_version,
-    openai_api_key=api_key,
-    deployment_name=deployment_name,
+llm_gpt = AzureChatOpenAI(
+    openai_api_base=api_base_g,
+    openai_api_version=api_version_g,
+    openai_api_key=api_key_g,
+    deployment_name=deployment_name_g,
     model_name="gpt-4o",
     temperature=0.9,
     max_tokens=300,
@@ -46,7 +47,7 @@ Respond helpfully and clearly:
 
 # Create the chain
 llmchain = LLMChain(
-    llm=llm,
+    llm=llm_gpt,
     prompt=prompt,
     memory=memory,
 )
@@ -60,7 +61,7 @@ while True:
         break
 
     response = llmchain.invoke({"question": user_input+str(memory.buffer)})
-    print(f"Bot: {response['text']}\n")
+    print(f"Response by gpt-4o: {response['text']}\n")
     print("")
     print("--------------------------------------------------------------------------")
     print("")

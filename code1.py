@@ -12,5 +12,6 @@ llm=AzureChatOpenAI(
     model_name="gpt-4o",
     temperature=0.7,
 )
+
 result=llm.invoke("where is MARWADI UNIVERSITY located? ")
 print(result.content)
