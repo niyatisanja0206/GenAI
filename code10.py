@@ -27,8 +27,26 @@ llm_gpt = AzureChatOpenAI(
     top_p=0.9,
 )
 
+# Load API config (update .env accordingly)
+api_key_d = os.getenv("AZURE_OPENAI_API_KEY")
+api_base_d = os.getenv("AZURE_OPENAI_API_BASE")  # e.g., "https://your-endpoint.openai.azure.com/"
+deployment_name_d = "DeepSeek-R1-0528"  # Your DeepSeek deployment
+api_version_d = "2024-05-01-preview"  # Version for DeepSeek
+
+# Initialize the DeepSeek LLM via Azure-compatible interface
+llm = AzureChatOpenAI(
+    openai_api_base=api_base_d,
+    openai_api_version=api_version_d,
+    openai_api_key=api_key_d,
+    deployment_name=deployment_name_d,
+    model_name="deepseek-chat",  # or just "deepseek" if applicable
+    temperature=0.9,
+    max_tokens=300,
+    top_p=0.9,
+)
+
 # Memory to store conversation history
-memory = ConversationBufferMemory(
+memory_g = ConversationBufferMemory(
     memory_key="chat_history",
     return_messages=True,
 )
