@@ -16,25 +16,29 @@ embedding_model = AzureOpenAIEmbeddings(
     deployment="text-embedding-ada-002",
 )
 
-# Read the file
+# Read the file and split into individual movie lines
 file_path = "movies.txt"
 with open(file_path, "r", encoding="utf-8") as file:
-    movies = file.read()
+    movies = [line.strip() for line in file if line.strip()]  # Remove empty lines and strip whitespace
 
+# Get user input and embed the query
 user_input = input("Enter a movie type: ")
 query = user_input.lower()
 query_vector = embedding_model.embed_query(query)
 
-doc_vectors = embedding_model.encode(movies)
+# Embed individual movie lines
+doc_vectors = embedding_model.embed_documents(movies)
 
+# Compute cosine similarity
 similarities = cosine_similarity([query_vector], doc_vectors)[0]
 
+# Create DataFrame and sort by similarity
 df = pd.DataFrame({
     'movie': movies,
     'similarity': similarities
 })
 
-ranked_movies = df.sort_values(by='similarity', ascending=False). reset_index(drop=True)
+ranked_movies = df.sort_values(by='similarity', ascending=False).reset_index(drop=True)
 
+# Print the top results
 print(ranked_movies)
-

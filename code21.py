@@ -20,15 +20,13 @@ embedding_model = AzureOpenAIEmbeddings(
 def search(query):
     index = faiss.read_index("marwadi_index.index")
     query_vector = embedding_model.embed_query(query)
+    query_vector = np.array(query_vector).reshape(1, -1)  # Ensure it's a 2D NumPy array
     distances, indices = index.search(query_vector, 1)
     return distances, indices
 
 query = "What are faculties?"
-qu_vector = embedding_model.embed_query(query)
 distances, indices = search(query)
-print(f"Query: {query}")
 
+print(f"Query: {query}")
 print(f"Distances: {distances}")
 print(f"Indices: {indices}")
-
-
