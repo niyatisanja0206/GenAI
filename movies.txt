@@ -1,0 +1,8 @@
+'dhoom 3 : thriller, horror, action, comedy, drama, romance',
+'dilwale dulhania le jayenge : romance, drama, comedy',
+'3 idiots : comedy, drama, romance',
+'zindagi na milegi dobara : comedy, drama, romance',
+'Krrish 3 : action, thriller, drama, romance, science fiction',
+'krrish : action, thriller, drama, romance, science fiction',
+'Chak de! India : drama, sports',
+'barfi : drama, romance, comedy',
