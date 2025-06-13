@@ -16,7 +16,7 @@ deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME")
 api_version = os.getenv("AZURE_OPENAI_API_VERSION")
 
 # Set Streamlit page
-st.set_page_config(page_title="Azure GPT-4o Chatbot", page_icon="🤖")
+st.set_page_config(page_title="Azure GPT-4o Chatbot")
 st.title("Azure GPT-4o Chatbot")
 
 # Initialize LLM only once
