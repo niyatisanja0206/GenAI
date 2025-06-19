@@ -75,7 +75,7 @@ builder.add_edge("tools", "reasoner")
 react_graph = builder.compile()
 
 # Input message
-messages = [HumanMessage(content="What is 2 times of Narendra Modi's age?")]
+messages = [HumanMessage(content="What is net worth of Elon Musk and devide it by India's population?")]
 
 # Invoke graph
 result = react_graph.invoke({"messages": messages})
