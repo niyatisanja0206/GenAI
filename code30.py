@@ -73,7 +73,7 @@ react_graph = builder.compile()
 react_graph = builder.compile()
 
 # Input message
-messages = [HumanMessage(content="Should I buy the stocks of Adani if I am in India?")]
+messages = [HumanMessage(content="Should I buy the stocks of Reliance if I am in India?")]
 
 # Invoke graph
 result = react_graph.invoke({"messages": messages})
